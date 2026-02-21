@@ -97,9 +97,9 @@ export function PrayerTimeCard({
       whileHover={{ y: -5, transition: { duration: 0.2 } }}
       className="relative w-full"
     >
-      <Card className={`border-t-4 ${borderClass} bg-gradient-to-b ${bgGradient} backdrop-blur-sm overflow-hidden ${countdown.isActive ? `shadow-lg ${glowColor}` : ''} transition-shadow duration-300 h-full`}>
+      <Card className={`border-t-4 ${borderClass} bg-linear-to-b ${bgGradient} backdrop-blur-sm overflow-hidden ${countdown.isActive ? `shadow-lg ${glowColor}` : ''} transition-shadow duration-300 h-full`}>
         <motion.div
-          className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-white/5"
+          className="absolute inset-0 bg-linear-to-br from-transparent via-transparent to-white/5"
           initial={{ opacity: 0 }}
           animate={{ opacity: countdown.isActive ? 1 : 0 }}
           transition={{ duration: 0.5 }}
@@ -119,7 +119,7 @@ export function PrayerTimeCard({
         
         <CardContent className="relative pt-0">
           <motion.p 
-            className="text-4xl sm:text-5xl font-black text-center bg-gradient-to-br from-foreground to-foreground/70 bg-clip-text leading-tight"
+            className="text-4xl sm:text-5xl font-black text-center bg-linear-to-br from-foreground to-foreground/70 bg-clip-text leading-tight"
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ duration: 0.4, delay: 0.2 }}
@@ -136,36 +136,18 @@ export function PrayerTimeCard({
                 exit={{ opacity: 0, height: 0 }}
                 transition={{ duration: 0.4 }}
               >
-                <motion.div
-                  className="flex items-center justify-center gap-1.5 sm:gap-2 mb-2"
-                  animate={{ scale: [1, 1.05, 1] }}
-                  transition={{ duration: 2, repeat: Infinity }}
-                >
+                <div className="flex items-center justify-center gap-1.5 sm:gap-2 mb-2">
                   <Clock className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-primary" />
                   <p className="text-xs sm:text-sm font-medium text-primary">Time Remaining</p>
-                </motion.div>
+                </div>
                 
-                <motion.div
-                  className="inline-block px-4 py-2 sm:px-6 sm:py-3 rounded-lg bg-primary/10 border border-primary/20"
-                  animate={countdown.isActive ? { 
-                    boxShadow: [
-                      "0 0 0px rgba(var(--primary), 0)",
-                      "0 0 20px rgba(var(--primary), 0.3)",
-                      "0 0 0px rgba(var(--primary), 0)"
-                    ]
-                  } : {}}
-                  transition={{ duration: 2, repeat: Infinity }}
-                >
-                  <motion.p 
+                <div className="inline-block px-4 py-2 sm:px-6 sm:py-3 rounded-lg bg-primary/10 border border-primary/20">
+                  <p 
                     className="text-2xl sm:text-3xl md:text-4xl font-bold text-primary tabular-nums"
-                    key={formatCountdown(countdown)}
-                    initial={{ scale: 1.1, opacity: 0.8 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    transition={{ duration: 0.3 }}
                   >
                     {formatCountdown(countdown)}
-                  </motion.p>
-                </motion.div>
+                  </p>
+                </div>
               </motion.div>
             )}
           </AnimatePresence>

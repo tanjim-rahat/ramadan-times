@@ -34,7 +34,7 @@ export default function App() {
   const errorMessage = error instanceof Error ? error.message : "Error loading prayer times";
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20 text-foreground px-3 py-4 sm:p-6 flex flex-col items-center gap-4 sm:gap-6 md:gap-8 relative overflow-hidden safe-area-padding">
+    <div className="min-h-screen bg-linear-to-br from-background via-background to-muted/20 text-foreground px-3 py-4 sm:p-6 flex flex-col items-center gap-4 sm:gap-6 md:gap-8 relative overflow-hidden safe-area-padding">
       {/* Animated background pattern */}
       <motion.div 
         className="absolute inset-0 opacity-[0.03]"
@@ -70,7 +70,7 @@ export default function App() {
           >
             <Moon className="w-7 h-7 sm:w-10 sm:h-10 text-primary" />
           </motion.div>
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-black bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent leading-tight">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-black bg-linear-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent leading-tight">
             Ramadan 2026
           </h1>
         </motion.div>
@@ -108,7 +108,7 @@ export default function App() {
               whileHover={{ scale: 1.05 }}
               transition={{ duration: 0.2 }}
             >
-              <MapPin className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-primary flex-shrink-0" />
+              <MapPin className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-primary shrink-0" />
               <p className="text-xs sm:text-sm text-muted-foreground">
                 {division && <span className="font-semibold text-foreground">{division.name}</span>}
                 {division && district && <span className="mx-1 sm:mx-1.5 text-muted-foreground/50">•</span>}
@@ -216,14 +216,14 @@ export default function App() {
             </motion.div>
             
             <motion.div 
-              className="col-span-full text-center p-4 sm:p-6 bg-gradient-to-r from-secondary/50 via-secondary to-secondary/50 backdrop-blur-sm rounded-xl border border-border/50 shadow-lg"
+              className="col-span-full text-center p-4 sm:p-6 bg-linear-to-r from-secondary/50 via-secondary to-secondary/50 backdrop-blur-sm rounded-xl border border-border/50 shadow-lg"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.5 }}
               whileHover={{ scale: 1.02 }}
             >
                <motion.p 
-                 className="font-bold text-base sm:text-lg bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent"
+                 className="font-bold text-base sm:text-lg bg-linear-to-r from-primary to-primary/70 bg-clip-text text-transparent"
                  initial={{ opacity: 0 }}
                  animate={{ opacity: 1 }}
                  transition={{ delay: 0.6 }}
