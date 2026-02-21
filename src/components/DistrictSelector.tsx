@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
+import { motion } from "framer-motion";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { type District, type Division } from "../types/prayer";
 import { fetchDistricts } from "../lib/helpers";
@@ -27,10 +28,14 @@ export function DistrictSelector({
    };
 
   return (
-    <div className="w-full md:w-[300px]">
+    <motion.div 
+      className="w-full sm:w-[300px]"
+      whileHover={{ scale: 1.02 }}
+      transition={{ duration: 0.2 }}
+    >
       <Select onValueChange={onSelect} disabled={isDisabled}>
         <SelectTrigger 
-          className="w-full bg-card"
+          className="w-full h-11 sm:h-10 bg-card/50 backdrop-blur-sm border-border/50 hover:border-primary/50 transition-colors duration-200 text-sm sm:text-base"
           aria-label="Select district for prayer times"
           aria-describedby={query.error ? "district-error" : undefined}
         >
@@ -66,6 +71,6 @@ export function DistrictSelector({
       <span className="sr-only" aria-live="polite" aria-atomic="true">
         {query.isLoading ? "Loading districts..." : `${query.data?.length || 0} districts available`}
       </span>
-    </div>
+    </motion.div>
   );
 }
