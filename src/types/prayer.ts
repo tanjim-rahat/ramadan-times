@@ -1,6 +1,6 @@
 export interface District {
-  district: string;
-  districtbn: string;
+  id: number | string;
+  name: string;
 }
 
 export interface PrayerTimings {

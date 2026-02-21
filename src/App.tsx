@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/select";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DistrictSelector } from "./components/DistrictSelector";
-import { AlAdhanData } from "./types/prayer";
+import { type AlAdhanData } from "./types/prayer";
 
 export default function App() {
   const [location, setLocation] = useState("Dhaka");
