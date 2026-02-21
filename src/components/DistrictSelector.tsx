@@ -1,15 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { type District, type Division } from "../types/prayer";
-
-const fetchDistricts = async (division: Division): Promise<District[]> => {
-  const response = await fetch("https://bdapis.vercel.app/geo/v2.0/districts/" + division.id);
-  if (!response.ok) {
-    throw new Error("Failed to load districts");
-  }
-  const json = await response.json();
-  return json.data;
-};
+import { fetchDistricts } from "../lib/helpers";
 
 export function DistrictSelector({ 
   setDistrict, 

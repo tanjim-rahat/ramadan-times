@@ -1,24 +1,14 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { DistrictSelector } from "./components/DistrictSelector";
 import { DivisionSelector } from "./components/DivisionSelector";
-import { convertTo12Hour, formatDate } from "./lib/utils";
-import type { AlAdhanData, Division, District } from "./types/prayer";
+import { PrayerTimeCard } from "./components/PrayerTimeCard";
+import { formatDate } from "./lib/utils";
+import type { Division, District } from "./types/prayer";
+import { fetchPrayerTimes } from "./lib/helpers";
 
-const fetchPrayerTimes = async (district: District): Promise<AlAdhanData> => {
-  const response = await fetch(
-    `https://api.aladhan.com/v1/timingsByCity?city=${district.name}&country=Bangladesh&method=1`
-  );
-  if (!response.ok) {
-    throw new Error("Failed to fetch prayer times");
-  }
-  const json = await response.json();
-  if (json.code !== 200) {
-    throw new Error(json.data || "Invalid location");
-  }
-  return json.data;
-};
+
 
 export default function App() {
   const [district, setDistrict] = useState<District | null>(null);
@@ -88,27 +78,21 @@ export default function App() {
 
       {!isLoading && data && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-2xl">
-          {/* Sehri Card */}
-          <Card className="border-t-4 border-t-blue-500">
-            <CardHeader>
-              <CardTitle className="text-center text-xl">Sehri Ends</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-5xl font-black text-center">{convertTo12Hour(data.timings.Fajr)}</p>
-              <p className="text-center text-sm text-muted-foreground mt-2">Sunrise: {convertTo12Hour(data.timings.Imsak)}</p>
-            </CardContent>
-          </Card>
+          <PrayerTimeCard
+            title="Sehri Ends"
+            mainTime={data.timings.Imsak}
+            subLabel="Fajr"
+            subTime={data.timings.Fajr}
+            borderColor="blue"
+          />
 
-          {/* Iftar Card */}
-          <Card className="border-t-4 border-t-orange-500">
-            <CardHeader>
-              <CardTitle className="text-center text-xl">Iftar Begins</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-5xl font-black text-center">{convertTo12Hour(data.timings.Maghrib)}</p>
-              <p className="text-center text-sm text-muted-foreground mt-2">Sunset: {convertTo12Hour(data.timings.Maghrib)}</p>
-            </CardContent>
-          </Card>
+          <PrayerTimeCard
+            title="Iftar Begins"
+            mainTime={data.timings.Maghrib}
+            subLabel="Sunset"
+            subTime={data.timings.Maghrib}
+            borderColor="orange"
+          />
           
           <div className="col-span-full text-center p-4 bg-secondary rounded-lg">
              <p className="font-medium">{data.date.hijri.day} {data.date.hijri.month.en} {data.date.hijri.year} AH</p>
