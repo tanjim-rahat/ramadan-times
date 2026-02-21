@@ -1,43 +1,58 @@
-import { useState } from 'react'
-import reactLogo from '@/assets/react.svg'
-import viteLogo from '/vite.svg'
-import { cn } from '@/lib/cn'
+import { useState, useEffect } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/select";
+import { DistrictSelector } from "./components/DistrictSelector";
+import { AlAdhanData } from "./types/prayer";
 
-function App() {
-  const [count, setCount] = useState(0)
+export default function App() {
+  const [location, setLocation] = useState("Dhaka");
+  const [data, setData] = useState<AlAdhanData | null>(null);
+
+  useEffect(() => {
+    // AlAdhan API call using the selected district
+    fetch(`https://api.aladhan.com/v1/timingsByCity?city=${location}&country=Bangladesh&method=1`)
+      .then((res) => res.json())
+      .then((json) => setData(json.data));
+  }, [location]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
-      <div className="text-center">
-        <div className="flex justify-center gap-8 mb-8">
-          <a href="https://vite.dev" target="_blank" className="hover:opacity-80 transition-opacity">
-            <img src={viteLogo} className="w-24 h-24" alt="Vite logo" />
-          </a>
-          <a href="https://react.dev" target="_blank" className="hover:opacity-80 transition-opacity">
-            <img src={reactLogo} className="w-24 h-24 animate-spin-slow" alt="React logo" />
-          </a>
-        </div>
-        <h1 className="text-5xl font-bold text-white mb-8">Vite + React</h1>
-        <div className="bg-white rounded-lg shadow-xl p-8 mb-4">
-          <button 
-            onClick={() => setCount((count) => count + 1)}
-            className={cn(
-              "bg-purple-600 hover:bg-purple-700 text-white",
-              "font-semibold py-3 px-6 rounded-lg transition-colors"
-            )}
-          >
-            count is {count}
-          </button>
-          <p className="mt-4 text-gray-600">
-            Edit <code className="bg-gray-100 px-2 py-1 rounded">src/App.tsx</code> and save to test HMR
-          </p>
-        </div>
-        <p className="text-white text-sm opacity-75">
-          Click on the Vite and React logos to learn more
-        </p>
-      </div>
-    </div>
-  )
-}
+    <div className="min-h-screen bg-background text-foreground p-6 flex flex-col items-center gap-8">
+      <header className="text-center">
+        <h1 className="text-4xl font-bold text-primary mb-2">Ramadan 2026</h1>
+        <p className="text-muted-foreground">Sehri & Iftar Tracker</p>
+      </header>
 
-export default App
+      <DistrictSelector onSelect={setLocation} />
+
+      {data && (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-2xl">
+          {/* Sehri Card */}
+          <Card className="border-t-4 border-t-blue-500">
+            <CardHeader>
+              <CardTitle className="text-center text-xl">Sehri Ends</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-5xl font-black text-center">{data.timings.Fajr}</p>
+              <p className="text-center text-sm text-muted-foreground mt-2">Imsak: {data.timings.Imsak}</p>
+            </CardContent>
+          </Card>
+
+          {/* Iftar Card */}
+          <Card className="border-t-4 border-t-orange-500">
+            <CardHeader>
+              <CardTitle className="text-center text-xl">Iftar Begins</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-5xl font-black text-center">{data.timings.Maghrib}</p>
+              <p className="text-center text-sm text-muted-foreground mt-2">Sunset: {data.timings.Maghrib}</p>
+            </CardContent>
+          </Card>
+          
+          <div className="col-span-full text-center p-4 bg-secondary rounded-lg">
+             <p className="font-medium">{data.date.hijri.day} {data.date.hijri.month.en} {data.date.hijri.year} AH</p>
+             <p className="text-xs text-muted-foreground">{data.date.readable}</p>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
