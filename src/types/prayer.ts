@@ -1,7 +1,15 @@
+export interface Division {
+  id: string;
+  name: string;
+}
+
 export interface District {
   id: number | string;
   name: string;
+  division_id?: string;
+  division_name?: string;
 }
+
 
 export interface PrayerTimings {
   Fajr: string;
