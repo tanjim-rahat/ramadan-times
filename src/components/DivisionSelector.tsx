@@ -4,7 +4,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { fetchDivisions } from "../lib/helpers";
 import type { Division } from "@/types/prayer";
 
-export function DivisionSelector({ setDivision }: { setDivision: (val: Division) => void }) {
+export function DivisionSelector({ division, setDivision }: { division: Division | null; setDivision: (val: Division) => void }) {
   const { data: divisions = [], isLoading, error } = useQuery({
     queryKey: ["divisions"],
     queryFn: fetchDivisions,
@@ -25,7 +25,7 @@ export function DivisionSelector({ setDivision }: { setDivision: (val: Division)
       whileHover={{ scale: 1.02 }}
       transition={{ duration: 0.2 }}
     >
-      <Select onValueChange={onSelect} disabled={isLoading || !!error}>
+      <Select value={division?.id} onValueChange={onSelect} disabled={isLoading || !!error}>
         <SelectTrigger 
           className="w-full h-11 sm:h-10 bg-card/50 backdrop-blur-sm border-border/50 hover:border-primary/50 transition-colors duration-200 text-sm sm:text-base"
           aria-label="Select division for prayer times"
