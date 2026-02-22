@@ -21,7 +21,7 @@ export function DivisionSelector({ setDivision }: { setDivision: (val: Division)
 
   return (
     <motion.div 
-      className="w-full sm:w-[300px]"
+      className="w-full sm:w-75"
       whileHover={{ scale: 1.02 }}
       transition={{ duration: 0.2 }}
     >
@@ -38,7 +38,7 @@ export function DivisionSelector({ setDivision }: { setDivision: (val: Division)
           } />
         </SelectTrigger>
         <SelectContent 
-          className="max-h-[300px] overflow-y-auto"
+          className="max-h-75 overflow-y-auto"
           position="popper"
         >
           {divisions.length === 0 && !isLoading ? (

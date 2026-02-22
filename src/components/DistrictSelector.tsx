@@ -29,7 +29,7 @@ export function DistrictSelector({
 
   return (
     <motion.div 
-      className="w-full sm:w-[300px]"
+      className="w-full sm:w-75"
       whileHover={{ scale: 1.02 }}
       transition={{ duration: 0.2 }}
     >
@@ -47,7 +47,7 @@ export function DistrictSelector({
           } />
         </SelectTrigger>
         <SelectContent 
-          className="max-h-[300px] overflow-y-auto"
+          className="max-h-75 overflow-y-auto"
           position="popper"
         >
           {query.data?.length === 0 && query.isSuccess ? (
