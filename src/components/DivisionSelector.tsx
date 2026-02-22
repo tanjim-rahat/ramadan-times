@@ -1,31 +1,52 @@
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
+import { useEffect } from "react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Label } from "@/components/ui/label";
 import { fetchDivisions } from "../lib/helpers";
 import type { Division } from "@/types/prayer";
 
-export function DivisionSelector({ setDivision }: { setDivision: (val: Division) => void }) {
+const DIVISION_STORAGE_KEY = "selectedDivisionId";
+
+export function DivisionSelector({ division, setDivision }: { division: Division | null; setDivision: (val: Division) => void }) {
   const { data: divisions = [], isLoading, error } = useQuery({
     queryKey: ["divisions"],
     queryFn: fetchDivisions,
   });
+
+  // Load saved division from localStorage when divisions are fetched
+  useEffect(() => {
+    if (divisions.length > 0 && !division) {
+      const savedDivisionId = localStorage.getItem(DIVISION_STORAGE_KEY);
+      if (savedDivisionId) {
+        const savedDivision = divisions.find((d) => d.id === savedDivisionId);
+        if (savedDivision) {
+          setDivision(savedDivision);
+        }
+      }
+    }
+  }, [divisions, division, setDivision]);
 
   const errorMessage = error instanceof Error ? error.message : "Error loading divisions";
 
   const onSelect = (divisionId: string) => {
     const selectedDivision = divisions.find((d) => d.id === divisionId);
     if (selectedDivision) {
+      localStorage.setItem(DIVISION_STORAGE_KEY, divisionId);
       setDivision(selectedDivision);
     }
   };
 
   return (
     <motion.div 
-      className="w-full sm:w-[300px]"
+      className="w-full sm:w-75"
       whileHover={{ scale: 1.02 }}
       transition={{ duration: 0.2 }}
     >
-      <Select onValueChange={onSelect} disabled={isLoading || !!error}>
+      <Label className="mb-2">
+        Division
+      </Label>
+      <Select value={division?.id || ""} onValueChange={onSelect} disabled={isLoading || !!error}>
         <SelectTrigger 
           className="w-full h-11 sm:h-10 bg-card/50 backdrop-blur-sm border-border/50 hover:border-primary/50 transition-colors duration-200 text-sm sm:text-base"
           aria-label="Select division for prayer times"
@@ -38,7 +59,7 @@ export function DivisionSelector({ setDivision }: { setDivision: (val: Division)
           } />
         </SelectTrigger>
         <SelectContent 
-          className="max-h-[300px] overflow-y-auto"
+          className="max-h-75 overflow-y-auto"
           position="popper"
         >
           {divisions.length === 0 && !isLoading ? (

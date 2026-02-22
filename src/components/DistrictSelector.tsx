@@ -1,13 +1,19 @@
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
+import { useEffect } from "react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Label } from "@/components/ui/label";
 import { type District, type Division } from "../types/prayer";
 import { fetchDistricts } from "../lib/helpers";
 
-export function DistrictSelector({ 
+const DISTRICT_STORAGE_KEY = "selectedDistrictName";
+
+export function DistrictSelector({
+  district, 
   setDistrict, 
   division 
 }: { 
+  district?: District | null;
   setDistrict: (val: District) => void;
   division?: Division | null;
 }) {
@@ -17,23 +23,40 @@ export function DistrictSelector({
     enabled: division != null, // Only fetch when a division is selected
   });
 
+  // Load saved district from localStorage when districts are fetched
+  useEffect(() => {
+    if (query.data && query.data.length > 0 && !district) {
+      const savedDistrictName = localStorage.getItem(DISTRICT_STORAGE_KEY);
+      if (savedDistrictName) {
+        const savedDistrict = query.data.find((d) => d.name === savedDistrictName);
+        if (savedDistrict) {
+          setDistrict(savedDistrict);
+        }
+      }
+    }
+  }, [query.data, district, setDistrict]);
+
   const errorMessage = query.error instanceof Error ? query.error.message : "Error loading districts";
   const isDisabled = query.isLoading || !!query.error || division == null;
 
   const onSelect = (districtName: string) => {
     const selectedDistrict = query.data?.find((d) => d.name === districtName);
     if (selectedDistrict) {
+      localStorage.setItem(DISTRICT_STORAGE_KEY, districtName);
       setDistrict(selectedDistrict);
     }
    };
 
   return (
     <motion.div 
-      className="w-full sm:w-[300px]"
+      className="w-full sm:w-75"
       whileHover={{ scale: 1.02 }}
       transition={{ duration: 0.2 }}
     >
-      <Select onValueChange={onSelect} disabled={isDisabled}>
+      <Label className="mb-2">
+        District
+      </Label>
+      <Select value={district?.name || ""} onValueChange={onSelect} disabled={isDisabled}>
         <SelectTrigger 
           className="w-full h-11 sm:h-10 bg-card/50 backdrop-blur-sm border-border/50 hover:border-primary/50 transition-colors duration-200 text-sm sm:text-base"
           aria-label="Select district for prayer times"
@@ -47,7 +70,7 @@ export function DistrictSelector({
           } />
         </SelectTrigger>
         <SelectContent 
-          className="max-h-[300px] overflow-y-auto"
+          className="max-h-75 overflow-y-auto"
           position="popper"
         >
           {query.data?.length === 0 && query.isSuccess ? (

@@ -90,8 +90,8 @@ export default function App() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.3 }}
       >
-        <DivisionSelector setDivision={handleDivisionChange} />
-        <DistrictSelector setDistrict={setDistrict} division={division} />
+        <DivisionSelector division={division} setDivision={handleDivisionChange} />
+        <DistrictSelector district={district} setDistrict={setDistrict} division={division} />
       </motion.div>
 
       <AnimatePresence mode="wait">
