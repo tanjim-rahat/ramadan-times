@@ -1,8 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
+import { useEffect } from "react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { fetchDivisions } from "../lib/helpers";
 import type { Division } from "@/types/prayer";
+
+const DIVISION_STORAGE_KEY = "selectedDivisionId";
 
 export function DivisionSelector({ division, setDivision }: { division: Division | null; setDivision: (val: Division) => void }) {
   const { data: divisions = [], isLoading, error } = useQuery({
@@ -10,11 +13,25 @@ export function DivisionSelector({ division, setDivision }: { division: Division
     queryFn: fetchDivisions,
   });
 
+  // Load saved division from localStorage when divisions are fetched
+  useEffect(() => {
+    if (divisions.length > 0 && !division) {
+      const savedDivisionId = localStorage.getItem(DIVISION_STORAGE_KEY);
+      if (savedDivisionId) {
+        const savedDivision = divisions.find((d) => d.id === savedDivisionId);
+        if (savedDivision) {
+          setDivision(savedDivision);
+        }
+      }
+    }
+  }, [divisions, division, setDivision]);
+
   const errorMessage = error instanceof Error ? error.message : "Error loading divisions";
 
   const onSelect = (divisionId: string) => {
     const selectedDivision = divisions.find((d) => d.id === divisionId);
     if (selectedDivision) {
+      localStorage.setItem(DIVISION_STORAGE_KEY, divisionId);
       setDivision(selectedDivision);
     }
   };
